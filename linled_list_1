@@ -1,0 +1,131 @@
+/*
+	数据结构-链表
+*/
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef int Elemtype;
+typedef int Status;
+
+typedef struct LNode {
+	Elemtype data;
+	struct LNode *next;
+}LNode, * LinkList;
+
+void Create_NList(LinkList &L)
+{
+	L = (LinkList)malloc(sizeof(LNode));
+	L->next = NULL;
+	L->data = 0;
+	LinkList head = L;
+	int count = 0;//计数器
+	printf("Input the node number: ");
+	scanf_s("%d", &count);
+	for (int i = count; i > 0; i--)
+	{
+		LinkList p = (LinkList)malloc(sizeof(LNode));//创建节点
+		scanf_s("%d", &p->data);
+		head->next = p;
+		head = p;//尾插法-将新节点插到单链表的表尾上
+		L->data++;//用头节点data存放表长
+	}
+	head->next = NULL;
+	
+	//{
+	//	p->next = head->next;
+	//	head->next = p->next;//头插法
+	//}
+	//return 1;
+}
+
+void Input_Node(LinkList &L)
+{
+	LinkList head = L->next;
+	while (head->next != NULL)
+	{
+		printf("%d  ", head->data);
+		head = head->next;
+	}
+	printf("%d", head->data);
+	
+	printf("\n链表长度为%d\n", L->data);
+}
+
+void Get_Node(LinkList L, int i)
+{
+	LinkList p = L->next;
+	int j = 1;
+	while (p && j < i)
+	{
+		p = p->next;
+		j++;
+	}//找到查找的位置
+
+	if (!p || j > i)
+		exit(0);
+
+	printf("第%d号元素的值为%d\n", i,p->data);
+}
+
+void Listinsert_N(LinkList &L, int i, Elemtype &e)
+{
+	LinkList head = L;
+	int j = 0;
+	while (head && j < i - 1)//找到添加的前一个节点
+	{
+		head = head->next;
+		j++;
+	}
+	if (!head || j > i - 1)
+		exit(0);
+	LinkList p = (LinkList)malloc(sizeof(LNode));//创建添加节点
+	p->data = e;//存储值
+	p->next = head->next;
+	head->next = p;
+	L->data++;
+}
+
+void Listdelete_N(LinkList &L, int i)
+{
+	int j = 0;
+	LinkList head = L;
+	while (head && j < i - 1)
+	{
+		head = head->next;
+		j++;//找到i的位置
+	}
+	while (!head || j > i - 1)
+		exit(0);
+	LinkList p = head->next;
+	head->next = p->next;
+	L->data--;
+	free(p);
+}
+int main()
+{
+	LinkList L;
+	int i = 0;
+	int e = 0;
+	Create_NList(L);
+	Input_Node(L);
+
+	printf("请输入您想查找的位置i>>");
+	scanf_s("%d", &i);
+	Get_Node(L, i);
+	//Input_Node(L);
+
+	printf("请输入您想添加的位置和添加的值>");
+	scanf_s("%d%d", &i, &e);
+	Listinsert_N(L, i, e);
+	Input_Node(L);
+	
+	printf("请输入您想删除的位置>");
+	scanf_s("%d", &i);
+	Listdelete_N(L, i);
+	Input_Node(L);
+
+
+	free(L);
+	system("pause");
+	return 0;
+}
