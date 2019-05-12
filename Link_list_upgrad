@@ -5,7 +5,7 @@ typedef int Elemtype;
 typedef struct Node {
 	Elemtype data;
 	struct Node *next;
-}LNode,*LinkList;
+}LNode, *LinkList;
 
 //创建链表
 void Create_NList(LinkList &L)
@@ -48,7 +48,7 @@ void List_insert(LinkList &L, int i, Elemtype &e)
 	//首先要判断查找位置是否正确,同时找到该处节点
 	LinkList head = L;
 	int j = 0;//计数器
-	while (head && j < i - 1)
+	while (head && j < i - 1)//找到第i-1位下标
 	{
 		head = head->next;
 		j++;
@@ -104,42 +104,52 @@ void Get_node(LinkList L, int i)
 		j++;
 	}
 	if (!head || j > i)
-		exit(0);
+		return;
 	printf("第%d号元素的值为%d", i, head->data);
 }
 
-void hebing_Node(LinkList L, LinkList L1, LinkList &L2)
+
+LinkList MergeLinkList(LinkList L, LinkList L1)
 {
-	L2 = L1;
-	LinkList pa = L->next;
-	LinkList pb = L1->next;
-	LinkList pc = L2;
-	while (pa && pb)
+	LinkList L2;
+	L2 = (LinkList)malloc(sizeof(LNode));
+	L2->next = NULL;
+
+	LinkList p, q, r,s;
+	p = L->next;
+	q = L1->next;
+	r = L2;
+	while (p && q)
 	{
-		if (pa->data <= pb->data)
+		if (p->data < q->data)
 		{
-			pc->next = pa;
-			pc = pa;
-			pa = pa->next;
+			r->next = p;
+			r = p;
+			p = p->next;
 		}
 		else
 		{
-			pc->next = pb;
-			pc = pb;
-			pb = pb->next;
+			r->next = q;
+			r = q;
+			q = q->next;
 		}
-		
-		/*pc->next = pa ? pa : pb;*/
-		while (pa != NULL)
-			pc->next = pa;
-		while (pb != NULL)
-			pc->next = pb;
-
 	}
-	
+
+	if (p == NULL)
+	{
+		r->next = q;
+	}
+	if (q == NULL)
+	{
+		r->next = p;
+	}
+
 	L2->data = L->data + L1->data;
-	/*free(L1);
-	L1 = NULL;*/
+
+	L->next = NULL;
+	L1->next = NULL;
+
+	return L2;
 }
 
 
@@ -148,15 +158,18 @@ int main()
 	LinkList L;
 	LinkList L1;
 	LinkList L2;
-	int i = 0;
-	Elemtype e = 0;
+	//int i = 0;
+	//Elemtype e = 0;
+	
 	Create_NList(L);
 	Input_Node(L);
+	
 	Create_NList(L1);
 	Input_Node(L1);
-	hebing_Node(L, L1, L2);
-	printf("%d", L2->data);
+	
+	L2 = MergeLinkList(L, L1);
 	Input_Node(L2);
+	
 
 	/*printf("请输入L您想插入的位置和值> ");
 	scanf_s("%d%d", &i, &e);
@@ -268,10 +281,11 @@ int main()
 
 	//} while (6 != input);
 
+	free(L);
+	free(L1);
+	free(L2);
 
 
-
-	
 	system("pause");
 	return 0;
 }
