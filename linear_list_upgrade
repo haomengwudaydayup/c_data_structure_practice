@@ -48,7 +48,7 @@ void output_list(Sqlist L)
 		printf("%d ", L.data[i]);
 	}
 	printf("\n线性表的的长度为lengh: %d\n", L.lengh);
-	
+
 }
 
 //添加元素
@@ -84,7 +84,7 @@ void listdelete(Sqlist &L, int i)
 	Elemtype *q = &L.data[i - 1];//先找到被删除的位置下标
 	printf("第%d号位置被删除的值为%d\n", i, *q);
 	q++;
-	for (Elemtype *p = &L.data[L.lengh - 1]; q<p; q++)
+	for (Elemtype *p = &L.data[L.lengh - 1]; q <= p; q++)
 		*(q - 1) = *q;
 	L.lengh--;
 
@@ -133,6 +133,28 @@ void binary_seek(Sqlist L, int value)
 	}
 }
 
+void Mergelist(Sqlist L, Sqlist L1, Sqlist &L2)
+{
+	Initlist(L2);
+	L2.lengh = L2.listsize = L.lengh + L1.lengh;
+	L2.data = (Elemtype *)malloc(L2.lengh * sizeof(Elemtype));
+	Elemtype *pa = L.data, *pa_last = &L.data[L.lengh - 1];
+	Elemtype *pb = L1.data, *pb_last = &L1.data[L1.lengh - 1];
+	Elemtype *pc = L2.data; 
+	//开始判断大语句,前提是L,L1都是可序的！
+	while (pa <= pa_last && pb <= pb_last)
+	{
+		if (*pa <= *pb)
+			*(pc++) = *(pa++);
+		else
+			*(pc++) = *(pb++);
+	}
+	while (pa <= pa_last)
+		*(pc++) = *(pa++);
+	while (pb <= pb_last)
+		*(pc++) = *(pb++);
+	//over!
+}
 void meun()
 {
 	printf("*********** 1、初始化线性表       ************\n");
@@ -146,10 +168,21 @@ void meun()
 }
 int main()
 {
-	//Sqlist L;
-	//Initlist(L);//初始化线性表
-	//Creatlist(L);//创建线性表
-	//output_list(L);//输出线性表
+	Sqlist L;
+	Sqlist L1, L2;
+	
+	printf("L\n");
+	Initlist(L);//初始化线性表
+	Creatlist(L);//创建线性表
+	output_list(L);//输出线性表
+	
+	printf("L1\n");
+	Initlist(L1);//初始化线性表
+	Creatlist(L1);//创建线性表
+	output_list(L1);//输出线性表
+
+	Mergelist(L, L1, L2);//合并线性表
+	output_list(L2);
 
 	////添加元素
 	//Elemtype value = 0;
@@ -174,70 +207,70 @@ int main()
 	//scanf_s("%d", &value);
 	//binary_seek(L, value);
 
-	int input = 0;
-	int i = 0;
-	Elemtype value = 0;
-	
-	do
-	{
-		//循环体
-		meun();//菜单
+	//int input = 0;
+	//int i = 0;
+	//Elemtype value = 0;
 
-		printf("\n请选择>");
-		scanf_s("%d", &input);
-		
-		switch (input)
-		{
-		case 1:
-			//1、创建线性表
-			Sqlist L;
-			Initlist(L);
-			printf("初始化成功！\n");
-			break;
-		case 2:
-			//创建线性表
-			Creatlist(L);
-			break;
-		case 3:
-			//打印线性表和表长 
-			output_list(L);//输出线性表
-			break;
-		case 4:
-			//添加元素
-			printf("请输入您想插入的位置和插入的值>");
-			scanf_s("%d %d", &i, &value);
-			listinsert(L, i, value);
-			break;
-		case 5:
-			//删除元素
-			printf("请输入您想删除的位置>");
-			scanf_s("%d", &i);
-			listdelete(L, i);
-			break;
-		case 6:
-			//排序(bubble_sort)
-			bubble_sort(L);
-			break;
-		case 7:
-			//查找(binary_seek)
-			printf("请输入您想查找的值value>");
-			scanf_s("%d", &value);
-			binary_seek(L, value);
-			break;
-		case 8:
-			//退出
-			free(L.data);
-			break;
-		default:
-			printf("非法输入！，请重新选择>");
-			scanf_s("%d", &input);
-			break;
-		}
-		printf("\n");
+	//do
+	//{
+	//	//循环体
+	//	meun();//菜单
 
-	} while (8 != input);
-	
-	
+	//	printf("\n请选择>");
+	//	scanf_s("%d", &input);
+
+	//	switch (input)
+	//	{
+	//	case 1:
+	//		//1、创建线性表
+	//		Sqlist L;
+	//		Initlist(L);
+	//		printf("初始化成功！\n");
+	//		break;
+	//	case 2:
+	//		//创建线性表
+	//		Creatlist(L);
+	//		break;
+	//	case 3:
+	//		//打印线性表和表长 
+	//		output_list(L);//输出线性表
+	//		break;
+	//	case 4:
+	//		//添加元素
+	//		printf("请输入您想插入的位置和插入的值>");
+	//		scanf_s("%d %d", &i, &value);
+	//		listinsert(L, i, value);
+	//		break;
+	//	case 5:
+	//		//删除元素
+	//		printf("请输入您想删除的位置>");
+	//		scanf_s("%d", &i);
+	//		listdelete(L, i);
+	//		break;
+	//	case 6:
+	//		//排序(bubble_sort)
+	//		bubble_sort(L);
+	//		break;
+	//	case 7:
+	//		//查找(binary_seek)
+	//		printf("请输入您想查找的值value>");
+	//		scanf_s("%d", &value);
+	//		binary_seek(L, value);
+	//		break;
+	//	case 8:
+	//		//退出
+	//		free(L.data);
+	//		break;
+	//	default:
+	//		printf("非法输入！，请重新选择>");
+	//		scanf_s("%d", &input);
+	//		break;
+	//	}
+	//	printf("\n");
+
+	//} while (8 != input);
+
+
 	system("pause");
 	return 0;
 }
