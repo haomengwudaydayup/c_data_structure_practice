@@ -1,0 +1,33 @@
+ ListNode* partition(ListNode* pHead, int x) 
+    {
+        // write code here
+        //浪费空间来换取效率的方法
+        if(!pHead)
+            return NULL;
+        
+        struct ListNode *LF, *LB, *RF, *RB;
+        LF = (struct ListNode *)malloc(sizeof(struct ListNode));
+        RF = (struct ListNode *)malloc(sizeof(struct ListNode));
+        LB = LF;
+        RB = RF;
+        
+        while(pHead)
+        {
+            if(pHead->val < x)
+            {
+                LF->next = pHead;        //链接
+                LF = LF->next;        //移位
+            }
+            else
+            {
+                RF->next = pHead;
+                RF = RF->next;
+            }
+            pHead = pHead->next;
+        }
+        
+        RF->next = NULL;        //结尾
+        LF->next = RB->next;
+        free(RB);
+        
+        return LB->next;
