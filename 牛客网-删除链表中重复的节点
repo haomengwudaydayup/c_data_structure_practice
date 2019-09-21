@@ -1,0 +1,47 @@
+ListNode* deleteDuplication(ListNode* pHead)
+    {
+        if(!pHead)
+            return NULL;
+        
+        struct ListNode *prev, *cur, *next;
+        prev = NULL;
+        cur = pHead;
+        next = pHead->next;
+        
+        while(next)
+        {
+            if(cur->val == next->val)        //相等值的操作
+            {
+                struct ListNode *p_temp = NULL;
+                while(next->val == cur->val)
+                {
+                    p_temp = next->next;
+                    free(next);
+                    next = p_temp;
+                    if(next == NULL)
+                        break;
+                }
+                
+                if(prev == NULL)
+                {
+                    pHead = next;
+                }
+                else
+                {
+                    prev->next = next;
+                }
+                free(cur);
+                cur = next;
+                if(cur != NULL)
+                    next = cur->next;
+                else
+                    break;
+            }
+            else
+            {
+                prev = cur;
+                cur = next;
+                next = next->next;
+            }
+        }
+        return pHead;
