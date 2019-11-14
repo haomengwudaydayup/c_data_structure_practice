@@ -1,0 +1,203 @@
+#pragma once
+
+#include<iostream>
+#include<assert.h>
+#include<string>
+
+using namespace std;
+
+template <class T>
+class Vector
+{
+public:
+	typedef T* iterator;
+	typedef const T* const_iterator;
+
+	Vector()
+		:_start(nullptr)
+		, _finsh(nullptr)
+		, _eos(nullptr)
+	{
+		//容器的构造一开始应该为空
+	}
+	
+	size_t Capacity()
+	{
+		return _eos - _start;
+	}
+
+	size_t Size()
+	{
+		return _finsh - _start;
+	}
+
+	void Reserve(size_t news)
+	{
+		//开辟空间
+		if (news > this->Capacity())
+		{
+			//开辟空间
+			T* tmp = new T[news];
+			
+			//拷贝	-- memcpy(浅拷贝）
+			//memcpy(tmp, _start, sizeof(T) * Size());	//字节大小拷贝
+
+			//深拷贝
+			for (int i = 0; i < sz; ++i)
+			{
+				tmp[i] = _start[i];
+			}
+														//释放原有的空间。
+			_finsh = tmp + Size();	//原有空间释放， 需要重新赋值
+			_eos = tmp + news;		//一样。
+			
+			delete[] _start;		
+			_start = tmp;
+		
+		}
+	}
+
+	T& operator[](size_t pos)
+	{
+		if (pos > Size())
+			cout << "报错： 该pos超过容器的大小" << endl;
+		return _start[pos];
+	}
+
+	void Push_Back(const T& val)
+	{
+		if (_finsh == _eos)
+		{
+		size_t max = (_start == nullptr) ? 1 : (2 * Capacity());
+		Reserve(max);
+		}
+		*_finsh++ = val;
+	}
+
+	iterator begin()
+	{
+		return _start;
+	}
+
+	iterator end()
+	{
+		return _eos;
+	}
+
+	const_iterator begin() const
+	{
+		return _start;
+	}
+
+	const_iterator end() const
+	{
+		return _eos;
+	}
+
+	void Insert(iterator pos, const T& val)
+	{
+		assert(pos >= begin() && pos <= end());
+
+		//判断是否满
+
+		int step = pos - _start;
+
+		if (_finsh == _eos)
+		{
+			size_t news = (_start == nullptr) ? 1 : (2 * Capacity());
+			Reserve(news);
+			pos = _start + step;	//确保迭代器pos有效
+		}
+
+		//元素后移
+		iterator end = _finsh;
+		while (end > pos)
+		{
+			*end = *(end - 1);
+			--end;
+		}
+
+		//赋值， 并且finsh++
+		*pos = val;
+		++_finsh;
+	}
+
+
+	iterator& Erase(iterator pos)
+	{
+		assert(pos >= begin() && pos <= end());
+
+		iterator start = pos;
+		while (pos < _eos - 1)
+		{
+			*pos = *(pos + 1);
+			_start++;
+		}
+
+
+		--_finsh;
+		return pos
+	}
+
+	void Pop_back()
+	{
+		Erase(end() - 1);
+	}
+
+
+	void Resize(size_t n, const T& val = T(0));
+	{
+		if (n <= Size())
+		{
+			_finsh = _start + n;
+		}
+		else
+		{
+			if (n > Capacity())
+			{
+				Reserve(n);
+			}
+			while (_finsh != _start + n)
+			{
+				*finsh = *val;
+				++finsh;
+			}
+		}
+	}
+
+	template<class Input_iterator>
+
+
+	Vector(Input_iterator first, Input_iterator end)
+	{
+		while (first != end)
+		{
+			Push_Back(*first);
+			++first;
+		}
+	}
+
+	Vector(const Vector<T>& vec)
+		:_start(new T[vec.size()])
+		, _finsh(_start + vec.Size())
+		, _eos(_start + vec.Capacity())
+	{
+		for (int i = 0, i < vec.Size(); ++i)
+			_start[i] = vec[i];
+	}
+
+
+	~Vector
+	{
+		if (_start)
+		{
+			delete[] _start;
+			_start = nullptr;
+		}
+	}
+
+private:
+	iterator _start;
+	iterator _finsh;
+	iterator _eos;
+};
