@@ -1,0 +1,86 @@
+自己写的
+采用哈希的思想实现，
+o(n)
+s(n)
+
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+int main()
+{
+    string s;
+    string s1;
+    int count = 0;
+    int max = 0;
+    getline(cin, s);
+    
+    s1.resize(s.size());
+    int len = s.size();
+    int i = 0;
+    
+    while(i < len)
+    {
+        if(s[i] >= '0' && s[i] <= '9')    //证明是数字字符
+        {    
+            string tmp;
+            
+            while(s[i] >= '0' && s[i] <= '9' && i < len)
+            {
+                tmp += s[i];
+                ++count;
+                ++i;
+            }
+            
+            if(count > max)
+            {
+                s1 = tmp;
+                max = count;    //保存当前max最大值
+            }
+            
+            count = 0;    //不管更新还是不更新都重置count值为0
+        }
+        else
+            ++i;
+        
+    }
+    
+    s1 += '\0';
+    
+    cout << s1 << endl;
+    
+}
+
+--------------------分割线-------------------------
+
+大牛写法：
+o(n)
+s(n)
+
+#include<iostream> 
+#include<string> 
+
+using namespace std; 
+int main() 
+{    
+	string str,res,cur;    
+	cin>>str;    
+	for(int i=0;i<=str.length();i++)    
+	{        // 数字+=到cur        
+		if(str[i]>='0' && str[i]<='9')        
+		{            
+			cur+=str[i];        
+		}        
+		else        
+		{            
+			// 找出更长的字符串，则更新字符串            
+			if(res.size() < cur.size())                
+				res=cur;            
+			else               
+				cur.clear();        
+		}    
+	}    
+	cout<<res;    
+	return 0; 
+}
