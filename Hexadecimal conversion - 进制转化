@@ -1,0 +1,38 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+
+using namespace std;
+
+int main()
+{
+    string arr;
+    int m_value;
+    int n_value;
+    int flag = 1;
+    cin >> m_value >> n_value;    //输入
+     
+    if(m_value < 0)
+    {    
+        flag = -1;
+        m_value = -m_value;
+    }
+    while(m_value)
+    {
+        int x = m_value % n_value;    //保存余数
+        m_value = m_value / n_value;    //往前走
+        if(x <= 9)
+        {
+              arr += (x + '0');
+        }
+        else
+            arr += ('A' + (x - 10));
+    }
+    
+    reverse(arr.begin(), arr.end());  //逆置
+    
+    if(flag == -1)
+         arr.insert(arr.begin(), '-');  //如果为负数，则需要加负号
+    
+    cout << arr << endl; 
+}
