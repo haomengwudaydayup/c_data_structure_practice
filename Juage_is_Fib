@@ -1,0 +1,53 @@
+/*
+    这道题最大的难点就是如何判断一个数是一个斐波那契数。
+    对于判断一个数是否为斐波那契数，我们可以通过构造FIB数列的方式来判断， 如果当前的sum<n我们接着构造， 如果>=我们则停止
+    然后判断这个数是等于sum == n 还是sum > n， 只有在等于的情况下才是正确的FIB数， 其他的都不是FIB数。 来实现判断一个数是否为FIB的函数接口。
+*/
+#include<iostream>
+
+using namespace std;
+
+bool Judge_is_Fib(const int n)
+{
+    int a = 0;
+    int b = 1;
+    int sum = 0;
+    
+    while(sum < n)
+    {
+        //斐波那契数列求法。
+        sum = a + b;
+        a = b;
+        b = sum;
+    }
+    
+    if(sum == n)
+        return true;    //我们要的是找到值
+    return false;
+}
+
+int main()
+{
+    int n = 0;
+    cin >> n;    //输入需要判断的数。
+    
+    int step1 = 0;
+    int step2 = 0;
+    int n1 = n, n2 = n;
+    
+    while(!Judge_is_Fib(n1) && !Judge_is_Fib(n2))
+    {      
+        --n1;
+        ++step1;    //从左边展开判断
+        
+        ++n2;
+        ++step2;    //从右边展开判断
+    }
+    
+    //保障min_step为最小值达到FIB数的最小步长。
+    int min_step = step1;
+    if(step2 < step1)
+        min_step = step2;
+    
+    cout << min_step << endl;
+}
