@@ -1,0 +1,25 @@
+class Parenthesis {
+public:
+    bool chkParenthesis(string A, int n) 
+    {
+        // write code here
+        int count = 0;
+        
+        for(int i = 0; i < A.size(); ++i)
+        {
+            if(A[i] == '(' || A[i] == ')')
+            {
+                if(A[i] == '(')
+                    ++count;
+                else
+                    --count;
+            }
+            else
+                return false;
+        }
+        
+        if(count == 0)
+            return true;
+        return false;
+    }
+};
