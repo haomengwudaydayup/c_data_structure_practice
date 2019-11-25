@@ -1,0 +1,51 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<cstring>
+
+using namespace std;
+
+bool Judge_first(const vector<string>& arr)
+{
+    for(int i = 0; i < arr.size() - 1; ++i)
+    {
+        if(strcmp(arr[i + 1].c_str(),  arr[i].c_str()) < 0)
+            return false;
+    }
+    return true;
+}
+
+bool Judge_second(const vector<string>& arr)
+{
+    for(int i = 0; i < arr.size() - 1; ++i)
+    {
+        if(arr[i + 1].size() < arr[i].size())
+            return false;
+    }
+    return true;
+}
+
+int main()
+{
+    int n;
+    cin >> n;
+    vector<string> arr;
+    arr.resize(n);
+    
+    for(int i = 0; i < n; ++i)
+        cin >> arr[i];
+    
+    bool value1 = Judge_first(arr);    //字典成立
+    bool value2 = Judge_second(arr);    //长度成立
+    
+    if(value1 && value2)
+        cout << "both" << endl;
+    else if(value1 && !value2)
+        cout << "lexicographically" << endl;
+    else if(!value1 && value2)
+        cout << "lengths" << endl;
+    else
+        cout << "none" << endl;
+    
+    return 0;
+}
