@@ -1,0 +1,136 @@
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+void Juage_password_length(const string& pasword, int& count)
+{
+	if (pasword.size() >= 8)
+		count += 25;
+	else if (pasword.size() >= 5 && pasword.size() <= 7)
+		count += 10;
+	else if (pasword.size() <= 4)
+		count += 5;
+}
+
+int Juage_password_char(const string& pasword, int& count)
+{
+	int a = 0, A = 0;
+	for (const auto& it : pasword)
+	{
+		if (it >= 'a' && it <= 'z')
+			++a;
+		if (it >= 'A' && it <= 'Z')
+			++A;
+	}
+	if (a == 0 && A == 0)
+	{
+		count += 0;
+		return 0;
+	}
+	else if (a > 0 && A == 0)
+	{
+		count += 10;
+		return 1;
+	}
+	else if (A > 0 && a == 0)
+	{
+		count += 10;
+		return 1;
+	}
+	else if (A > 0 && a > 0)
+	{
+		count += 20;
+		return 2;
+	}
+}
+
+int Judge_password_account(const string& pasword, int& count)
+{
+	int a = 0;
+	for (const auto& it : pasword)
+	{
+		if (it >= '0' && it <= '9')
+			++a;
+		if (a > 1)
+			break;
+	}
+
+	if (a == 0)
+		count += 0;
+	else if (a == 1)
+		count += 10;
+	else if (a > 1)
+		count += 20;
+
+	return a;
+}
+
+int Judge_password_symbol(const string& pasword, int& count)
+{
+	int a = 0;
+	for (const auto& it : pasword)
+	{
+		if ((it >= 0x21 && it <= 0x2F) || (it >= 0x3A && it <= 0x40)
+			|| (it >= 0x5B && it <= 0x60) || (it >= 0x7B && it <= 0x7E))
+		{
+			++a;
+		}
+		if (a > 1)
+			break;
+	}
+
+	if (a == 0)
+		count += 0;
+	else if (a == 1)
+		count += 10;
+	else
+		count += 25;
+
+	return a;
+}
+
+void Judge_password_reword(const string& pasword, int& count)
+{
+	int acc = Judge_password_account(pasword, count);
+	int ch = Juage_password_char(pasword, count);
+	int sym = Judge_password_symbol(pasword, count);
+
+	if (ch == 1 && acc > 0 && sym == 0)
+		count += 2;
+	else if (ch == 1 && acc > 0 && sym > 0)
+		count += 3;
+	else if (ch == 2 && acc > 0 && sym > 0)
+		count += 5;
+}
+
+int main()
+{
+	string pasword;
+	getline(cin, pasword);    //输入密码
+	
+	int count = 0;
+
+	Juage_password_length(pasword, count);
+	//Juage_password_char(pasword, count);
+	//Judge_password_account(pasword, count);
+	//Judge_password_symbol(pasword, count);
+	Judge_password_reword(pasword, count);
+
+	if (count >= 90)
+		cout << "VERY_SECURE" << endl;
+	else if (count >= 80)
+		cout << "SECURE" << endl;
+	else if (count >= 70)
+		cout << "VERY_STRONG" << endl;
+	else if (count >= 60)
+		cout << "STRONG" << endl;
+	else if (count >= 50)
+		cout << "AVERAGE" << endl;
+	else if (count >= 25)
+		cout << "WEAK" << endl;
+	else if (count >= 0)
+		cout << "VERY_WEAK" << endl;
+
+	return 0;
+}
